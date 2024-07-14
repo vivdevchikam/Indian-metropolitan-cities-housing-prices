@@ -36,6 +36,32 @@ body {
   background-color: #f8f9fa;
 }
 
+.nav-bar {
+  padding-bottom: 1rem;
+}
+
+.nav-item {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+li {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+li a {
+  text-decoration: none;
+  color: #dd5e89;
+}
+
+li a:link,
+li a:active,
+li a:hover {
+  outline: 2px solid #dd5e89;
+  padding: 0 1rem;
+}
+
 .card-header {
   margin: 1rem 0rem;
   padding: 0 1.4rem;
