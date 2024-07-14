@@ -30,6 +30,7 @@
                     id="location"
                     class="selectpicker form-control mb-2 text-center"
                     required="1"
+                    placeholder="Location"
                   >
                     {% for location in locations%}
                     <option value="{{location}}">{{location}}</option>
@@ -37,7 +38,7 @@
                   </select>
                 </div>
                 <div class="col-body">
-                  <label for="location">
+                  <label for="sqft">
                     <b>S.Q.F.T :</b>
                   </label>
                   <input
@@ -49,38 +50,38 @@
                   />
                 </div>
                 <div class="col-body">
-                  <label for="location">
+                  <label for="bathroom">
                     <b>Bathroom :</b>
                   </label>
                   <input
-                    name="sqft"
-                    id="sqft"
+                    name="bathroom"
+                    id="bathroom"
                     required="1"
-                    placeholder="S.Q.F.T"
+                    placeholder="Bathroom"
                     type="number"
                   />
                 </div>
                 <div class="col-body">
-                  <label for="location">
+                  <label for="bhk">
                     <b>B.H.K :</b>
                   </label>
                   <input
-                    name="sqft"
-                    id="sqft"
+                    name="bhk"
+                    id="bhk"
                     required="1"
-                    placeholder="S.Q.F.T"
+                    placeholder="B.H.K"
                     type="number"
                   />
                 </div>
                 <div class="col-body">
-                  <label for="location">
+                  <label for="price per sqft">
                     <b>Price per sqft :</b>
                   </label>
                   <input
-                    name="sqft"
-                    id="sqft"
+                    name="pricesqft"
+                    id="pricesqft"
                     required="1"
-                    placeholder="S.Q.F.T"
+                    placeholder="Price per sqft"
                     type="number"
                   />
                 </div>
@@ -107,27 +108,45 @@
       }
       function send_data() {
         document.querySelector("form").addEventListener("submit", form_handler);
+        const form = document.querySelector("form");
 
-        const fd = new FormData(document.querySelector("form"));
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/predict", true);
+        const inputs = form.elements;
+        let isEmpty = false;
 
-        document.getElementById("prediction").innerHTML =
-          "Wait Predicting Price!...";
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState == XMLHttpRequest.DONE) {
-            if (xhr.responseText.includes("Error")) {
-              // Display error message
-              document.getElementById("prediction").innerHTML =
-                "Error: You have entered wrong value, Please correct them";
-            } else {
-              document.getElementById("prediction").innerHTML =
-                "Prediction: ₹" + xhr.responseText + " Housing prices";
-            }
+        // Check for empty values
+        for (const input of inputs) {
+          if (input.value === " ") {
+            isEmpty = true;
+            break;
           }
-        };
-        xhr.onload = function () {};
-        xhr.send(fd);
+        }
+        if (isEmpty) {
+          alert("Please fill in all the required values!");
+          isEmpty = false;
+        } else {
+          const fd = new FormData(document.querySelector("form"));
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", "/predict", true);
+
+          document.getElementById("prediction").innerHTML =
+            "Wait Predicting Price!...";
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+              if (xhr.responseText.includes("Error")) {
+                // Display error message
+                document.getElementById("prediction").innerHTML =
+                  "Error: You have entered wrong value, Please correct them";
+              } else {
+                document.getElementById("prediction").innerHTML =
+                  "Prediction: ₹" + xhr.responseText + " Housing prices";
+              }
+            }
+          };
+
+          xhr.onload = function () {};
+          xhr.send(fd);
+          document.querySelector("form").reset();
+        }
       }
     </script>
 
