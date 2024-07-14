@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="{{url_for('static', filename='icon.jpg')}}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/delhi.css')}}"
+    />
+    <title>Housing prices - Delhi</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <nav class="nav-bar">
+          <ul class="nav-item">
+            <li><a href="/delhi">Delhi</a></li>
+            <li>
+              <a href="/">Bangalore</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="card">
+          <div class="card-header">
+            <h1 class="h1-header">दिल्ली - Delhi</h1>
+            <div class="img-container">
+              <img
+                src="{{url_for('static', filename='banner.png')}}"
+                alt="banner"
+              />
+            </div>
+            <h3 class="h3-header">🏠 Delhi housing prices 🏠</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" accept-charset="utf-8">
+              <div class="row-body">
+                <div class="col-body">
+                  <label for="locality">
+                    <b>Locality :</b>
+                  </label>
+                  <select
+                    name="locality"
+                    id="locality"
+                    class="selectpicker form-control mb-2 text-center"
+                    required="1"
+                    placeholder="Locality"
+                  >
+                    {% for locality in localities%}
+                    <option value="{{locality}}">{{locality}}</option>
+                    {%endfor%}
+                  </select>
+                </div>
+                <div class="col-body">
+                  <label for="furnishing">
+                    <b>Furnishing :</b>
+                  </label>
+                  <select
+                    name="furnishing"
+                    id="furnishing"
+                    class="selectpicker form-control mb-2 text-center"
+                    required="1"
+                    placeholder="Locality"
+                  >
+                    {% for furnishing in furnishies%}
+                    <option value="{{furnishing}}">{{furnishing}}</option>
+                    {%endfor%}
+                  </select>
+                </div>
+                <div class="col-body">
+                  <label for="area">
+                    <b>Area :</b>
+                  </label>
+                  <input
+                    name="area"
+                    id="area"
+                    required="1"
+                    placeholder="Area"
+                    type="number"
+                  />
+                </div>
+                <div class="col-body">
+                  <label for="bhk">
+                    <b>B.H.K :</b>
+                  </label>
+                  <input
+                    name="bhk"
+                    id="bhk"
+                    required="1"
+                    placeholder="B.H.K"
+                    type="number"
+                  />
+                </div>
+                <div class="col-body">
+                  <label for="bathroom">
+                    <b>bathroom :</b>
+                  </label>
+                  <input
+                    name="bathroom"
+                    id="bathroom"
+                    required="1"
+                    placeholder="Bathroom"
+                    type="number"
+                  />
+                </div>
+                <div class="btn-container">
+                  <button class="btn" onclick="send_data_delhi()">
+                    Predict Price
+                  </button>
+                </div>
+              </div>
+            </form>
+            <br />
+            <div class="predict-container">
+              <h3 class="h3-predict">
+                <span id="prediction">Prediction :</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function form_handler(event) {
+        event.preventDefault(); // Don't submit the form normally
+      }
+      function send_data_delhi() {
+        document.querySelector("form").addEventListener("submit", form_handler);
+        const form = document.querySelector("form");
+
+        const inputs = form.elements;
+        let isEmpty = false;
+
+        // Check for empty values
+        for (const input of inputs) {
+          if (input.value === " ") {
+            isEmpty = true;
+            break;
+          }
+        }
+        if (isEmpty) {
+          alert("Please fill in all the required values!");
+          isEmpty = false;
+        } else {
+          const fd = new FormData(document.querySelector("form"));
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", "/predictdelhi", true);
+
+          document.getElementById("prediction").innerHTML =
+            "Wait Predicting Price!...";
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+              if (xhr.responseText.includes("Error")) {
+                // Display error message
+                document.getElementById("prediction").innerHTML =
+                  "Error: You have entered wrong value, Please correct them";
+              } else {
+                document.getElementById("prediction").innerHTML =
+                  "Prediction: ₹" + xhr.responseText + " Housing prices";
+              }
+            }
+          };
+
+          xhr.onload = function () {};
+          xhr.send(fd);
+          document.querySelector("form").reset();
+        }
+      }
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
