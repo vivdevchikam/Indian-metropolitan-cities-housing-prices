@@ -13,7 +13,7 @@ model = joblib.load('XGBRegressor.joblib')
 @app.route('/')
 def index():
   location = sorted(data.location.unique())
-  location.insert(0, 'Location')
+  location.insert(0, ' ')
   return render_template('index.html', locations=location)
 
 @app.route('/predict', methods=['POST'])
@@ -25,7 +25,7 @@ def predict():
   pricesqft = request.form.get('pricesqft')
   print(location, sqft, bathroom, bhk, pricesqft)
   input = pd.DataFrame([[location, sqft, bathroom, bhk, pricesqft]], columns=['location', 'total_sqft', 'bath', 'bhk', 'price_per_sqft'])
-  prediction = model.predict(input)[0] * 1e5
+  prediction = model.predict(input)[0] * 10000
   return str(np.round(prediction, 2))
 
 
