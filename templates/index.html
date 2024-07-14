@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/style.css')}}"
+    />
+    <title>Housing prices</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="card">
+          <div class="card-header">
+            <h1 class="h1-header">ಬೆಂಗಳೂರು - Bangaluru</h1>
+            <h3 class="h3-header">Bangalore housing prices</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" accept-charset="utf-8">
+              <div class="row-body">
+                <div class="col-body">
+                  <label for="location">
+                    <b>Location :</b>
+                  </label>
+                  <select
+                    name="location"
+                    id="location"
+                    class="selectpicker form-control mb-2 text-center"
+                    required="1"
+                  >
+                    {% for location in locations%}
+                    <option value="{{location}}">{{location}}</option>
+                    {%endfor%}
+                  </select>
+                </div>
+                <div class="col-body">
+                  <label for="location">
+                    <b>S.Q.F.T :</b>
+                  </label>
+                  <input
+                    name="sqft"
+                    id="sqft"
+                    required="1"
+                    placeholder="S.Q.F.T"
+                    type="number"
+                  />
+                </div>
+                <div class="col-body">
+                  <label for="location">
+                    <b>Bathroom :</b>
+                  </label>
+                  <input
+                    name="sqft"
+                    id="sqft"
+                    required="1"
+                    placeholder="S.Q.F.T"
+                    type="number"
+                  />
+                </div>
+                <div class="col-body">
+                  <label for="location">
+                    <b>B.H.K :</b>
+                  </label>
+                  <input
+                    name="sqft"
+                    id="sqft"
+                    required="1"
+                    placeholder="S.Q.F.T"
+                    type="number"
+                  />
+                </div>
+                <div class="col-body">
+                  <label for="location">
+                    <b>Price per sqft :</b>
+                  </label>
+                  <input
+                    name="sqft"
+                    id="sqft"
+                    required="1"
+                    placeholder="S.Q.F.T"
+                    type="number"
+                  />
+                </div>
+                <div class="btn-container">
+                  <button class="btn" onclick="send_data()">
+                    Predict Price
+                  </button>
+                </div>
+              </div>
+            </form>
+            <br />
+            <div class="predict-container">
+              <h3 class="h3-predict">
+                <span id="prediction">Prediction :</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function form_handler(event) {
+        event.preventDefault(); // Don't submit the form normally
+      }
+      function send_data() {
+        document.querySelector("form").addEventListener("submit", form_handler);
+
+        const fd = new FormData(document.querySelector("form"));
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/predict", true);
+
+        document.getElementById("prediction").innerHTML =
+          "Wait Predicting Price!...";
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.responseText.includes("Error")) {
+              // Display error message
+              document.getElementById("prediction").innerHTML =
+                "Error: You have entered wrong value, Please correct them";
+            } else {
+              document.getElementById("prediction").innerHTML =
+                "Prediction: ₹" + xhr.responseText + " Housing prices";
+            }
+          }
+        };
+        xhr.onload = function () {};
+        xhr.send(fd);
+      }
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
