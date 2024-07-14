@@ -4,15 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
+      rel="icon"
+      href="{{url_for('static', filename='icon.jpg')}}"
+      type="image/x-icon"
+    />
+    <link
       rel="stylesheet"
       href="{{url_for('static', filename='css/style.css')}}"
     />
-    <title>Housing prices</title>
+    <title>Housing prices - Bangalore</title>
   </head>
   <body>
     <div class="container">
       <div class="row">
         <div class="card">
+          <nav class="nav-bar">
+            <ul class="nav-item">
+              <li><a href="/">Home</a></li>
+              <li>
+                <a href="/delhi">Delhi</a>
+              </li>
+            </ul>
+          </nav>
           <div class="card-header">
             <h1 class="h1-header">ಬೆಂಗಳೂರು - Bengaluru</h1>
             <div class="temple"><span class="temple-emoji">🛕</span></div>
